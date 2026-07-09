@@ -17,7 +17,7 @@ pyodbc==5.2.0
 redis>=5.0
 
 # JWT auth con scopes
-python-jose[cryptography]==3.3.0
+PyJWT[crypto]==2.10.1
 
 # Rate limiting
 slowapi>=0.1.9

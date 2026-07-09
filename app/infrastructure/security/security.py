@@ -7,10 +7,11 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 from uuid import uuid4
 
-from jose import JWTError, jwt
+import jwt
+from jwt.exceptions import InvalidTokenError
 
-from app.infrastructure.security.auth_clients import APIClient, find_by_api_key
 from app.config.config import get_settings
+from app.infrastructure.security.auth_clients import APIClient, find_by_api_key
 
 
 def authenticate_api_key(api_key: str | None) -> APIClient | None:
@@ -39,7 +40,10 @@ def create_access_token(client: APIClient) -> tuple[str, int]:
 
 
 def decode_access_token(token: str) -> dict[str, Any]:
-    """Valida firma + expiracion + issuer. Lanza ValueError si algo falla."""
+    """Valida firma + expiracion + issuer + claims requeridos.
+
+    Lanza ValueError si algo falla (el resto del proyecto no conoce PyJWT).
+    """
     settings = get_settings()
     try:
         payload = jwt.decode(
@@ -47,19 +51,16 @@ def decode_access_token(token: str) -> dict[str, Any]:
             settings.jwt_secret,
             algorithms=[settings.jwt_algorithm],
             issuer=settings.jwt_issuer,
+            options={"require": ["exp", "iat", "iss", "sub"]},
         )
-    except JWTError as exc:
+    except InvalidTokenError as exc:
         raise ValueError(f"Invalid or expired token: {exc}") from exc
 
-    if "sub" not in payload:
-        raise ValueError("Token missing 'sub' claim")
     if "scopes" not in payload or not isinstance(payload["scopes"], list):
         raise ValueError("Token missing 'scopes' claim")
     return payload
 
 
 def has_required_scopes(token_scopes: list[str], required: tuple[str, ...]) -> bool:
-    """El token cumple si tiene '*' o todos los scopes requeridos."""
-    if "*" in token_scopes:
-        return True
+    """El token cumple si tiene todos los scopes requeridos."""
     return all(scope in token_scopes for scope in required)
