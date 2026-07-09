@@ -1,0 +1,34 @@
+# Secretos
+.env
+.env.*
+!.env.example
+*.zip
+appsettings.*.json
+api_clients.json
+!api_clients.example.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+api_itacamba/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
