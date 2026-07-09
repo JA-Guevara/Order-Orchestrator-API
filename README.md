@@ -1,4 +1,4 @@
-﻿# Itacamba API
+﻿#  API
 
 API que expone una base SQL Server al bot de ventas Itacamba con autenticación por **API Key -> JWT** y control de acceso por **scopes**.
 
