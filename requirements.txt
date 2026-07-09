@@ -6,15 +6,18 @@ uvicorn[standard]==0.32.1
 pydantic==2.10.3
 pydantic-settings==2.6.1
 
-# ORM (sin migraciones — la BD ya existe)
+# ORM async
 SQLAlchemy[asyncio]==2.0.36
-aioodbc>=0.5
 
 # Driver async SQL Server
 aioodbc==0.5.0
 pyodbc==5.2.0
 
-# JWT (auth con scopes)
+# Redis / Memurai
+redis>=5.0
+
+# JWT auth con scopes
 python-jose[cryptography]==3.3.0
-pip install "redis>=5.0"
+
+# Rate limiting
 slowapi>=0.1.9
